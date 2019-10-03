@@ -60,7 +60,7 @@ ParsedMappedFunctions<spacedim>::add_normal_components()
 
 template <int spacedim>
 void
-ParsedMappedFunctions<spacedim>::parse_parameters_call_back()
+ParsedMappedFunctions<spacedim>::parse_parameters(ParameterHandler &)
 {
   add_normal_components();
   _all_components = _component_names;
