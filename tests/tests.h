@@ -484,7 +484,12 @@ initlog(bool                          console = false,
 {
   deallogname = "output";
   deallogfile.open(deallogname.c_str());
+#if DEAL_II_VERSION_GTE(9, 1, 0)
   deallog.attach(deallogfile, true, flags);
+#else
+  deallog.attach(deallogfile, true);
+  (void)flags;
+#endif
   deallog.depth_console(console ? 10 : 0);
 }
 
@@ -500,7 +505,12 @@ mpi_initlog(const bool                    console = false,
     {
       deallogname = "output";
       deallogfile.open(deallogname.c_str());
+#  if DEAL_II_VERSION_GTE(9, 1, 0)
       deallog.attach(deallogfile, true, flags);
+#  else
+      deallog.attach(deallogfile, true);
+      (void)flags;
+#  endif
       deallog.depth_console(console ? 10 : 0);
     }
 #else
@@ -535,14 +545,23 @@ struct MPILogInitAll
         if (!deallog.has_file())
           {
             deallogfile.open("output");
+#if DEAL_II_VERSION_GTE(9, 1, 0)
             deallog.attach(deallogfile, true, flags);
+#else
+            deallog.attach(deallogfile, true);
+            (void)flags;
+#endif
           }
       }
     else
       {
         deallogname = "output" + Utilities::int_to_string(myid);
         deallogfile.open(deallogname.c_str());
+#if DEAL_II_VERSION_GTE(9, 1, 0)
         deallog.attach(deallogfile, true, flags);
+#else
+        deallog.attach(deallogfile, true);
+#endif
       }
 
     deallog.depth_console(console ? 10 : 0);
@@ -670,8 +689,10 @@ new_tbb_assertion_handler(const char *file,
   std::cerr << "Detailed description: " << comment << std::endl;
 
   // Reenable abort and stacktraces:
+#  if DEAL_II_VERSION_GTE(9, 1, 0)
   deal_II_exceptions::internals::allow_abort_on_exception = true;
   deal_II_exceptions::internals::show_stacktrace          = true;
+#  endif
 
   // And abort with a deal.II exception:
   Assert(false, ExcMessage("TBB Exception, see above"));
